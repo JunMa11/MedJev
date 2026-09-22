@@ -55,8 +55,8 @@ echo 'TYPESAFE_API_KEY=apikey_...' > .env && chmod 600 .env
 The dataset is ready for training at `data/medjev-v1/` (23,719 / 2,997 / 2,895 records from [Augmented Clinical Notes](https://huggingface.co/datasets/AGBonnet/augmented-clinical-notes))
 
 ```bash
-# download [Qwen3.5-0.8B](https://huggingface.co/Qwen/Qwen3.5-0.8B)
-git clone https://huggingface.co/Qwen/Qwen3.5-0.8B
+# download Qwen3.5-0.8B-Base
+git clone https://huggingface.co/Qwen/Qwen3.5-0.8B-Base
 
 # single GPU (>=16G)
 python -m medjev.train --out runs/medjev-0.8b \
