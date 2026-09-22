@@ -2,6 +2,7 @@
 
  MedJev turns free-text clinical notes into table-ready data. It is small enough to run on one consumer GPU inside your own hospital: **thousands of notes an hour**, no subscription or per-use fees, and no patient text ever leaves your network.
 
+https://github.com/user-attachments/assets/5e242713-8771-47c4-ab49-8bb5ba27ad41
 
 | Task Type | Answer | Example |
 |---|---|---|
@@ -9,7 +10,7 @@
 | `choice` | one of 2–255 named options | `primary_diagnostic_modality` — imaging, histopathology, laboratory, … |
 | `score` | an ordered level | `symptom_severity` — mild / moderate / severe |
 
-### How this differs from general LLMs (e.g., ChatGPT et al.)
+### How MedJev differs from general LLMs (e.g., ChatGPT et al.)
 
 | | MedJev | A general LLM |
 |---|---|---|
@@ -47,8 +48,6 @@ nvcc -V
 echo 'TYPESAFE_API_KEY=apikey_...' > .env && chmod 600 .env
 ```
 
-
-
 ---
 
 ## Training
@@ -56,6 +55,9 @@ echo 'TYPESAFE_API_KEY=apikey_...' > .env && chmod 600 .env
 The dataset is ready for training at `data/medjev-v1/` (23,719 / 2,997 / 2,895 records from [Augmented Clinical Notes](https://huggingface.co/datasets/AGBonnet/augmented-clinical-notes))
 
 ```bash
+# download [Qwen3.5-0.8B](https://huggingface.co/Qwen/Qwen3.5-0.8B)
+git clone https://huggingface.co/Qwen/Qwen3.5-0.8B
+
 # single GPU (>=16G)
 python -m medjev.train --out runs/medjev-0.8b \
     --epochs 2 --batch 1 --accum 8 --dtype bf16 --checkpointing 1 \
