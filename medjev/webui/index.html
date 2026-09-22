@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MedJev Arena</title>
+<style>
+:root{
+  --bg:#0a1029; --panel:#141e45; --panel-2:#101838; --line:#243158; --line-2:#32416f;
+  --ink:#eaeef8; --ink-dim:#a6b2d2; --ink-faint:#6d7aa4;
+  --base:#f26b43; --jev:#c48abd; --medjev:#8cc96a;
+  --good:#8cc96a; --bad:#e4566f; --gold:#7fb2ec;
+  --r:12px; --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:
+    radial-gradient(1200px 620px at 12% -12%,#1b2958 0%,transparent 62%),
+    radial-gradient(900px 520px at 92% -4%,#3a1430 0%,transparent 58%),
+    var(--bg);
+  color:var(--ink);font:14px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Inter,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+button{font:inherit;color:inherit;cursor:pointer}
+/* ---------- header ---------- */
+header{position:sticky;top:0;z-index:20;backdrop-filter:blur(14px);
+  background:rgba(10,16,41,.88);border-bottom:1px solid var(--line)}
+.hwrap{max-width:1680px;margin:0 auto;padding:13px 22px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.brand{display:flex;align-items:baseline;gap:10px}
+.brand h1{margin:0;font-size:19px;letter-spacing:-.02em;font-weight:650}
+.brand .sub{color:var(--ink-faint);font-size:12px;font-family:var(--mono)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;
+  border:1px solid var(--line-2);background:var(--panel-2);color:var(--ink-dim);
+  font:11px var(--mono);white-space:nowrap}
+.dot{width:6px;height:6px;border-radius:99px;background:var(--ink-faint)}
+.dot.ready{background:var(--good);box-shadow:0 0 8px var(--good)}
+.dot.off{background:var(--bad)}
+.dot.busy{background:var(--base);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.25}}
+/* ---------- leaderboard ---------- */
+.board{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;width:100%}
+.score{padding:13px 15px;border-radius:var(--r);border:1px solid var(--line);
+  background:linear-gradient(160deg,var(--panel) 0%,var(--panel-2) 100%);position:relative;overflow:hidden}
+.score::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--c)}
+.score.lead{border-color:color-mix(in srgb,var(--c) 45%,var(--line))}
+.score .who{font-size:12px;color:var(--ink-dim);display:flex;align-items:center;gap:7px;font-weight:600}
+.score .who i{width:8px;height:8px;border-radius:2px;background:var(--c);display:inline-block;font-style:normal}
+.score .who .crown{margin-left:auto;font-size:10px;font-family:var(--mono);color:var(--c);
+  border:1px solid var(--c);border-radius:99px;padding:1px 7px;opacity:.9}
+.score .val{font-size:30px;font-weight:660;letter-spacing:-.03em;margin-top:5px;
+  font-variant-numeric:tabular-nums;line-height:1.1}
+.score .val small{font-size:12px;color:var(--ink-faint);font-weight:400;letter-spacing:0}
+.score .meta{margin-top:3px;font:11px var(--mono);color:var(--ink-faint);display:flex;gap:10px;flex-wrap:wrap}
+/* progress */
+.prog{margin-top:11px}
+.prog .track{height:6px;border-radius:99px;background:#080d22;border:1px solid var(--line);overflow:hidden;position:relative}
+.prog .track i{display:block;height:100%;background:linear-gradient(90deg,var(--c),color-mix(in srgb,var(--c) 55%,#fff));
+  width:0;transition:width .4s cubic-bezier(.2,.8,.2,1);border-radius:99px}
+.prog .track.indet i{width:35%!important;animation:slide 1.2s infinite ease-in-out}
+@keyframes slide{0%{transform:translateX(-100%)}100%{transform:translateX(300%)}}
+.prog .cap{display:flex;justify-content:space-between;margin-top:5px;font:10.5px var(--mono);color:var(--ink-faint)}
+.prog .cap b{color:var(--c);font-weight:600}
+/* ---------- controls ---------- */
+.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;width:100%;
+  padding:11px 14px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel)}
+.controls label{font:11px var(--mono);color:var(--ink-faint);text-transform:uppercase;letter-spacing:.07em}
+.seg{display:flex;gap:3px;background:var(--panel-2);padding:3px;border-radius:9px;border:1px solid var(--line)}
+.seg button{padding:5px 12px;border-radius:7px;border:none;background:none;font:12px var(--mono);color:var(--ink-dim)}
+.seg button.on{background:var(--line-2);color:var(--ink)}
+.toggles{display:flex;gap:8px;flex-wrap:wrap}
+.tog{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:8px;
+  border:1px solid var(--line-2);background:var(--panel-2);font:11.5px var(--mono);color:var(--ink-dim);cursor:pointer}
+.tog.on{color:var(--ink);border-color:var(--c);background:color-mix(in srgb,var(--c) 11%,var(--panel-2))}
+.tog i{width:8px;height:8px;border-radius:2px;background:var(--c);display:inline-block;opacity:.4}
+.tog.on i{opacity:1}
+.btn{padding:8px 15px;border-radius:9px;border:1px solid var(--line-2);background:var(--panel-2);
+  color:var(--ink);font-size:12.5px;font-weight:550;transition:.15s}
+.btn:hover{border-color:var(--ink-faint);background:#1b2757}
+.btn.primary{background:linear-gradient(180deg,#8cc96a,#5f9b41);border-color:#74ae54;color:#08150a;
+  font-weight:680;box-shadow:0 6px 18px -8px rgba(116,174,84,.85)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.danger{border-color:rgba(192,35,60,.65);color:var(--bad)}
+.btn:disabled{opacity:.45;cursor:not-allowed;filter:none}
+.btn.ghost{background:none}
+.grow{flex:1}
+.elapsed{font:11.5px var(--mono);color:var(--ink-faint)}
+/* ---------- layout ---------- */
+main{max-width:1680px;margin:0 auto;padding:16px 22px 60px;display:flex;flex-direction:column;gap:16px}
+.cols{display:grid;grid-template-columns:300px minmax(0,1fr);gap:16px;align-items:start}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}
+.phead{padding:11px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.phead h2{margin:0;font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-dim);font-weight:650}
+.phead .right{margin-left:auto;font:11px var(--mono);color:var(--ink-faint)}
+/* ---------- per-question chart ---------- */
+.qchart{padding:6px 16px 16px}
+.qgroup{padding:11px 0;border-bottom:1px solid var(--line)}
+.qgroup:last-child{border-bottom:none}
+.qtop{display:flex;align-items:baseline;gap:9px;margin-bottom:7px;flex-wrap:wrap}
+.qtop .nm{font-size:13px;font-weight:600;letter-spacing:-.01em}
+.tag{font:10px var(--mono);padding:2px 7px;border-radius:99px;border:1px solid var(--line-2);color:var(--ink-faint)}
+.tag.noul{color:#7fb2ec;border-color:rgba(127,178,236,.32)}
+.tag.choice{color:#c48abd;border-color:rgba(196,138,189,.34)}
+.tag.score{color:#f2a243;border-color:rgba(242,107,67,.34)}
+.qtop .n{margin-left:auto;font:10.5px var(--mono);color:var(--ink-faint)}
+.qbar{display:grid;grid-template-columns:86px 1fr 52px;gap:9px;align-items:center;margin:3px 0}
+.qbar .who{font:10.5px var(--mono);color:var(--ink-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qbar .t{height:13px;border-radius:4px;background:#080d22;border:1px solid var(--line);overflow:hidden;position:relative}
+.qbar .t i{display:block;height:100%;background:var(--c);opacity:.9;width:0;transition:width .45s cubic-bezier(.2,.8,.2,1)}
+.qbar .v{font:11px var(--mono);text-align:right;font-variant-numeric:tabular-nums;color:var(--ink-dim)}
+.qbar.best .v{color:var(--c);font-weight:600}
+.qbar.best .who{color:var(--ink)}
+/* ---------- cases ---------- */
+aside{position:sticky;top:74px;display:flex;flex-direction:column;max-height:calc(100vh - 96px)}
+.searchbar{padding:10px 12px;border-bottom:1px solid var(--line)}
+.searchbar input{width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--line-2);
+  background:var(--panel-2);color:var(--ink);font:12px var(--mono);outline:none}
+.searchbar input:focus{border-color:var(--medjev)}
+.caselist{overflow-y:auto;flex:1;padding:6px}
+.case{padding:9px 11px;border-radius:9px;border:1px solid transparent;cursor:pointer;display:block;
+  width:100%;text-align:left;background:none}
+.case:hover{background:var(--panel-2);border-color:var(--line-2)}
+.case.on{background:linear-gradient(100deg,rgba(140,201,106,.15),transparent);border-color:rgba(140,201,106,.45)}
+.case .id{font:11px var(--mono);color:var(--medjev);display:flex;gap:8px;align-items:center}
+.case .id b{margin-left:auto;color:var(--ink-faint);font-weight:400}
+.case p{margin:3px 0 0;font-size:11.5px;color:var(--ink-dim);line-height:1.45;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.side-actions{padding:10px 12px;border-top:1px solid var(--line);display:flex;gap:8px}
+/* ---------- note + detail ---------- */
+.note-body{padding:0 16px 14px;max-height:250px;overflow-y:auto;position:relative}
+.note-body.collapsed{max-height:92px}
+.note-body.collapsed::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46px;
+  background:linear-gradient(transparent,var(--panel));pointer-events:none}
+.note-body pre{margin:12px 0 0;white-space:pre-wrap;word-break:break-word;font:12.5px/1.65 var(--mono);color:#c9d6e5}
+textarea{width:100%;min-height:190px;margin-top:12px;padding:12px;border-radius:9px;border:1px solid var(--line-2);
+  background:var(--panel-2);color:var(--ink);font:12.5px/1.6 var(--mono);outline:none;resize:vertical}
+textarea:focus{border-color:var(--medjev)}
+.gridwrap{overflow-x:auto}
+table.grid{width:100%;min-width:720px;border-collapse:separate;border-spacing:0}
+.grid th{background:var(--panel);padding:10px 12px;text-align:left;font-size:11px;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--ink-dim);border-bottom:1px solid var(--line-2);font-weight:650}
+.grid th .sysmark{display:flex;align-items:center;gap:7px}
+.grid th .sysmark i{width:8px;height:8px;border-radius:2px;background:var(--c);display:inline-block}
+.grid th small{display:block;font:10.5px var(--mono);color:var(--ink-faint);text-transform:none;
+  letter-spacing:0;margin-top:2px;font-weight:400}
+.grid td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.grid tr.qrow{cursor:pointer}
+.grid tr.qrow:hover td{background:rgba(255,255,255,.017)}
+.vname{font-size:13px;font-weight:600;letter-spacing:-.01em}
+.vmeta{margin-top:3px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.goldchip{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:7px;
+  background:rgba(127,178,236,.12);border:1px solid rgba(127,178,236,.35);color:var(--gold);font:11.5px var(--mono)}
+.ans{display:flex;gap:10px;align-items:flex-start}
+.mark{flex:none;width:19px;height:19px;border-radius:99px;display:grid;place-items:center;
+  font-size:11px;font-weight:700;margin-top:1px}
+.mark.ok{background:rgba(140,201,106,.16);color:var(--good);border:1px solid rgba(140,201,106,.5)}
+.mark.no{background:rgba(192,35,60,.18);color:var(--bad);border:1px solid rgba(228,86,111,.5)}
+.mark.na{background:var(--panel-2);color:var(--ink-faint);border:1px solid var(--line-2)}
+.ansbody{min-width:0;flex:1}
+.ansval{font-size:12.5px;font-weight:560;word-break:break-word}
+.ansval.wrong{color:var(--bad)}
+.conf{display:flex;align-items:center;gap:7px;margin-top:5px}
+.bar{flex:1;height:4px;border-radius:99px;background:var(--line);overflow:hidden;min-width:40px}
+.bar i{display:block;height:100%;background:var(--c);width:0;transition:width .45s}
+.confnum{font:10.5px var(--mono);color:var(--ink-faint);font-variant-numeric:tabular-nums}
+tr.detail td{background:var(--panel-2);padding:0;border-bottom:1px solid var(--line)}
+.dist{padding:14px 16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.dist .q{grid-column:1/-1;font-size:12px;color:var(--ink-dim);line-height:1.6;margin:0}
+.distcol h4{margin:0 0 8px;font:11px var(--mono);color:var(--c);display:flex;gap:6px}
+.distrow{display:grid;grid-template-columns:100px 1fr 38px;gap:8px;align-items:center;margin-bottom:4px}
+.distrow .k{color:var(--ink-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:10.5px var(--mono)}
+.distrow.isgold .k{color:var(--gold)}
+.distrow .b{height:9px;border-radius:3px;background:var(--line);overflow:hidden}
+.distrow .b i{display:block;height:100%;background:var(--c);opacity:.85;width:0;transition:width .4s}
+.distrow.isgold .b{outline:1px solid rgba(127,178,236,.5);outline-offset:1px}
+.distrow .v{font:10px var(--mono);color:var(--ink-faint);text-align:right;font-variant-numeric:tabular-nums}
+.muted{color:var(--ink-faint)}
+.err{font:11px var(--mono);color:var(--bad)}
+.empty{padding:44px 20px;text-align:center;color:var(--ink-faint)}
+.empty h3{color:var(--ink-dim);font-size:15px;margin:0 0 6px;font-weight:600}
+.skel{height:13px;border-radius:5px;background:linear-gradient(90deg,var(--line) 25%,var(--line-2) 50%,var(--line) 75%);
+  background-size:200% 100%;animation:sh 1.2s infinite}
+@keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@media(max-width:1080px){.cols{grid-template-columns:1fr}aside{position:static;max-height:400px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <div class="brand"><h1>MedJev Arena</h1><span class="sub" id="sub">loading…</span></div>
+    <div class="chips" id="chips"></div>
+  </div>
+</header>
+
+<main>
+  <div class="board" id="board"></div>
+
+  <div class="controls">
+    <label>Cases</label>
+    <div class="seg" id="limitSeg"></div>
+    <div class="toggles" id="sysToggles"></div>
+    <span class="grow"></span>
+    <span class="elapsed" id="jevHint"></span>
+    <span class="elapsed" id="elapsed"></span>
+    <button class="btn danger" id="btnStop" style="display:none">Stop</button>
+    <button class="btn primary" id="btnRun">Run benchmark</button>
+  </div>
+
+  <div class="panel">
+    <div class="phead"><h2>Accuracy per clinical variable</h2>
+      <span class="right" id="qchartNote">run the benchmark to fill this in</span></div>
+    <div class="qchart" id="qchart"></div>
+  </div>
+
+  <div class="cols">
+    <aside class="panel">
+      <div class="phead"><h2>Cases</h2><span class="right" id="caseCount"></span></div>
+      <div class="searchbar"><input id="search" placeholder="filter notes…" autocomplete="off"></div>
+      <div class="caselist" id="caselist"></div>
+      <div class="side-actions">
+        <button class="btn ghost" id="btnRandom" style="flex:1">Random</button>
+        <button class="btn ghost" id="btnPaste" style="flex:1">Own note</button>
+      </div>
+    </aside>
+
+    <section style="display:flex;flex-direction:column;gap:16px;min-width:0">
+      <div class="panel">
+        <div class="phead"><h2 id="noteTitle">Clinical note</h2>
+          <span class="right" id="noteMeta"></span>
+          <button class="btn ghost" id="btnExpand" style="padding:4px 10px;font-size:11px">Expand</button></div>
+        <div class="note-body collapsed" id="noteBody">
+          <pre class="muted">Pick a case on the left.</pre>
+        </div>
+        <div id="pasteBar" style="display:none;padding:0 16px 14px">
+          <button class="btn primary" id="btnRunNote">Answer this note</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="phead"><h2>This case, variable by variable</h2>
+          <span class="right">click a row for the full distribution</span></div>
+        <div class="gridwrap" id="results">
+          <div class="empty"><h3>No answers for this case yet</h3>
+          <div>Run the benchmark, then pick any case to see where the three systems disagreed.</div></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+const SYS = [
+  {id:"base",  name:"Qwen3.5-0.8B", sub:"base, zero-shot letters", color:"var(--base)"},
+  {id:"jev",   name:"Jev",          sub:"hosted System One",       color:"var(--jev)"},
+  {id:"medjev",name:"MedJev",       sub:"step-5000, LoRA + pointer",color:"var(--medjev)"},
+];
+const LIMITS = [50, 100, 1000];
+const S = {meta:null, cases:[], case:null, caseRes:{}, mode:"case", limit:1000,
+           on:{base:true, jev:true, medjev:true}, prog:null, poll:null, open:new Set()};
+
+const $ = s => document.querySelector(s);
+const el = (t,c,h) => {const e=document.createElement(t); if(c)e.className=c; if(h!==undefined)e.innerHTML=h; return e;};
+const esc = s => (s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pct = x => x===null||x===undefined ? "—" : (100*x).toFixed(1)+"%";
+const argmax = a => a.reduce((b,v,i,arr)=> v>arr[b]?i:b, 0);
+const sysOf = id => SYS.find(s=>s.id===id);
+
+function shortOpt(q,i){
+  if(q.type==="noul") return q.keys[i]==="true" ? "Yes" : "No";
+  if(q.type==="score") return (q.options[i]||"").split("—")[0].trim() || ("level "+i);
+  return q.keys[i].replace(/_/g," ");
+}
+
+/* ---------------- header ---------------- */
+function renderChips(){
+  const c = S.meta.config, box = $("#chips"); box.innerHTML="";
+  const chip = (dot,text) => box.appendChild(el("span","chip",`<span class="dot ${dot}"></span>${esc(text)}`));
+  chip("ready", c.run.split("/").slice(-2).join("/"));
+  chip(c.jev_available?"ready":"off",
+       c.jev_source==="cache" ? `jev · replaying ${c.jev_cached} recorded answers`
+                              : `jev · live ${c.jev_model} @ ${c.jev_limit} cases`);
+  if(c.gpus && c.gpus.base!==undefined){
+    chip("ready", `qwen → gpu ${c.gpus.base}`);
+    chip("ready", `medjev → gpu ${c.gpus.medjev}`);
+  } else {
+    chip("", `${c.device} · ${c.dtype}`);
+  }
+  chip("", `max_state ${c.max_state}`);
+  $("#sub").textContent = `${S.meta.split} split · ${S.meta.n_cases} cases · 11 clinical variables`;
+}
+
+/* ---------------- leaderboard + progress ---------------- */
+function renderBoard(){
+  const box = $("#board"); const p = S.prog;
+  const accs = SYS.map(s => p && p.systems[s.id] ? p.systems[s.id].accuracy : null);
+  const best = Math.max(...accs.map(a => a===null?-1:a));
+  box.innerHTML = "";
+  for(const [i,s] of SYS.entries()){
+    const st = p && p.systems[s.id];
+    const card = el("div","score"+(st && st.accuracy!==null && st.accuracy===best && best>=0 ? " lead" : ""));
+    card.style.setProperty("--c", s.color);
+    const frac = st && st.total ? st.done/st.total : 0;
+    const busy = st && ["queued","loading","running"].includes(st.state);
+    const label = !st ? (S.on[s.id] ? "not run yet" : "not in this run")
+      : st.state==="loading" ? "loading model…"
+      : st.state==="failed" ? "failed"
+      : st.state==="cancelled" ? `stopped at ${st.done}`
+      : `${st.done} / ${st.total} cases`;
+    card.innerHTML = `
+      <div class="who"><i></i>${esc(s.name)}
+        ${st && st.accuracy!==null && st.accuracy===best && best>=0 ? '<span class="crown">best</span>':''}</div>
+      <div class="val">${st?pct(st.accuracy):"—"} <small>${st&&st.n?`${st.hit}/${st.n} answers`:"micro accuracy"}</small></div>
+      <div class="meta">
+        <span>${esc(s.sub)}</span>
+        ${st&&st.median_ms!==null&&st.median_ms!==undefined?`<span>${Math.round(st.median_ms)} ms/case</span>`:""}
+        ${st&&st.errors?`<span style="color:var(--bad)">${st.errors} errors</span>`:""}
+      </div>
+      <div class="prog">
+        <div class="track ${st&&st.state==="loading"?"indet":""}"><i style="width:${100*frac}%"></i></div>
+        <div class="cap"><span>${esc(label)}</span><b>${st?Math.round(100*frac)+"%":""}</b></div>
+      </div>`;
+    box.appendChild(card);
+  }
+}
+
+function renderControls(){
+  const seg = $("#limitSeg"); seg.innerHTML="";
+  const all = S.meta.n_cases;
+  const opts = LIMITS.filter(n => n < all).map(n => [n, String(n)]);
+  opts.push([all, `all ${all.toLocaleString()}`]);
+  for(const [n,label] of opts){
+    const b = el("button", S.limit===n?"on":"", label);
+    b.onclick = ()=>{ S.limit=n; renderControls(); };
+    seg.appendChild(b);
+  }
+  const jevLimit = S.meta.config.jev_limit;
+  const jevOk = S.limit === jevLimit;
+  if(!jevOk) S.on.jev = false;                 // live API: only at the sanctioned count
+  const tg = $("#sysToggles"); tg.innerHTML="";
+  for(const s of SYS){
+    const locked = s.id==="jev" && !jevOk;
+    const b = el("button","tog"+(S.on[s.id]?" on":""),`<i></i>${esc(s.name)}`);
+    b.style.setProperty("--c", s.color);
+    if(locked){
+      b.style.opacity = .4; b.style.cursor = "not-allowed";
+      b.title = `Jev is called live, one paid request per case — only available at ${jevLimit} cases`;
+    } else {
+      b.onclick = ()=>{ S.on[s.id]=!S.on[s.id]; renderControls(); };
+    }
+    tg.appendChild(b);
+  }
+  $("#jevHint").textContent = jevOk
+    ? `Jev answers live at ${jevLimit} cases`
+    : `Jev runs only at ${jevLimit} cases`;
+}
+
+/* ---------------- per-question chart ---------------- */
+function renderQChart(){
+  const host = $("#qchart"), p = S.prog;
+  if(!p || !Object.keys(p.systems).length){
+    host.innerHTML = `<div class="empty"><h3>Nothing measured yet</h3>
+      <div>Pick how many cases to score and hit <b>Run benchmark</b>.</div></div>`;
+    return;
+  }
+  const qids = Object.keys(S.meta.questions);
+  const order = ["noul","choice","score"];
+  qids.sort((a,b)=> order.indexOf(S.meta.questions[a].type)-order.indexOf(S.meta.questions[b].type) || a.localeCompare(b));
+  host.innerHTML = "";
+  for(const qid of qids){
+    const spec = S.meta.questions[qid];
+    const vals = SYS.map(s => {
+      const st = p.systems[s.id]; const q = st && st.per_q && st.per_q[qid];
+      return q && q.n ? q.accuracy : null;
+    });
+    const n = SYS.map(s => (p.systems[s.id]?.per_q?.[qid]?.n) || 0).reduce((a,b)=>Math.max(a,b),0);
+    const best = Math.max(...vals.map(v=>v===null?-1:v));
+    const g = el("div","qgroup");
+    g.appendChild(el("div","qtop",
+      `<span class="nm">${esc(qid.replace(/_/g," "))}</span><span class="tag ${spec.type}">${spec.type}</span>
+       <span class="n">${n ? n.toLocaleString()+" answers" : ""}</span>`));
+    for(const [i,s] of SYS.entries()){
+      const row = el("div","qbar"+(vals[i]!==null && vals[i]===best && best>=0 ? " best":""));
+      row.style.setProperty("--c", s.color);
+      row.innerHTML = `<span class="who">${esc(s.name)}</span>
+        <span class="t"><i style="width:${vals[i]===null?0:100*vals[i]}%"></i></span>
+        <span class="v">${vals[i]===null?"—":(100*vals[i]).toFixed(1)}</span>`;
+      g.appendChild(row);
+    }
+    host.appendChild(g);
+  }
+  $("#qchartNote").textContent = p.running
+    ? `updating live · ${p.elapsed_s}s elapsed`
+    : `${p.total} cases · ${p.elapsed_s}s`;
+}
+
+/* ---------------- benchmark run ---------------- */
+async function startRun(){
+  const systems = SYS.filter(s=>S.on[s.id]).map(s=>s.id);
+  if(!systems.length) return;
+  const r = await fetch("/api/run",{method:"POST",headers:{"Content-Type":"application/json"},
+             body:JSON.stringify({systems, limit:S.limit})}).then(r=>r.json());
+  if(r.error){ alert(r.error); return; }
+  if(r.dropped) console.info(r.dropped);
+  $("#btnRun").disabled = true; $("#btnRun").textContent = "Running…";
+  $("#btnStop").style.display = "";
+  poll();
+  S.poll = setInterval(poll, 500);
+}
+
+async function poll(){
+  S.prog = await fetch("/api/progress").then(r=>r.json());
+  renderBoard(); renderQChart();
+  $("#elapsed").textContent = S.prog.elapsed_s!==undefined ? `${S.prog.elapsed_s}s elapsed` : "";
+  if(!S.prog.running){
+    clearInterval(S.poll); S.poll=null;
+    $("#btnRun").disabled = false; $("#btnRun").textContent = "Run benchmark";
+    $("#btnStop").style.display = "none";
+    if(S.case && S.mode==="case") loadCase(S.case.idx);   // pull this case's stored answers
+  }
+}
+
+async function stopRun(){ await fetch("/api/stop",{method:"POST",body:"{}"}); }
+
+/* ---------------- cases ---------------- */
+function renderCases(filter=""){
+  const list = $("#caselist"); list.innerHTML="";
+  const f = filter.trim().toLowerCase();
+  const hits = S.cases.filter(c => !f || c.preview.toLowerCase().includes(f) || String(c.idx).includes(f));
+  $("#caseCount").textContent = `${hits.length}/${S.cases.length}`;
+  for(const c of hits.slice(0,400)){
+    const b = el("button","case"+(S.case&&S.case.idx===c.idx&&S.mode==="case"?" on":""));
+    b.innerHTML = `<span class="id">#${c.idx}<b>${c.n_questions} vars · ${(c.chars/1000).toFixed(1)}k</b></span>
+                   <p>${esc(c.preview)}</p>`;
+    b.onclick = () => loadCase(c.idx);
+    list.appendChild(b);
+  }
+}
+
+async function loadCase(idx){
+  const r = await fetch(`/api/case/${idx}`).then(r=>r.json());
+  S.mode="case"; S.case=r; S.caseRes = r.results||{}; S.open.clear();
+  $("#noteTitle").textContent = `Clinical note #${idx}`;
+  $("#noteMeta").textContent = `${r.state.length.toLocaleString()} chars · ${Object.keys(r.questions).length} labelled variables`;
+  $("#noteBody").className = "note-body collapsed";
+  $("#noteBody").innerHTML = `<pre>${esc(r.state)}</pre>`;
+  $("#btnExpand").style.display = ""; $("#btnExpand").textContent = "Expand";
+  $("#pasteBar").style.display = "none";
+  renderCases($("#search").value); renderResults();
+}
+
+function pasteMode(){
+  S.mode="paste"; S.case=null; S.caseRes={}; S.open.clear();
+  $("#noteTitle").textContent = "Your own note";
+  $("#noteMeta").textContent = "unlabelled — the systems are compared against each other";
+  $("#noteBody").className = "note-body";
+  $("#btnExpand").style.display = "none";
+  $("#noteBody").innerHTML = `<textarea id="ta" placeholder="Paste a free-text clinical note. All 11 variables will be asked."></textarea>`;
+  $("#pasteBar").style.display = "";
+  renderCases($("#search").value); renderResults();
+}
+
+async function runNote(){
+  const note = $("#ta").value.trim(); if(!note) return;
+  S.case = {idx:null, state:note, questions:Object.fromEntries(
+    Object.entries(S.meta.questions).map(([qid,q])=>[qid,{...q,gold:null,gold_index:null}]))};
+  S.caseRes = {}; SYS.forEach(s=>{ if(S.on[s.id]) S.caseRes[s.id]="pending"; });
+  renderResults();
+  await Promise.all(SYS.filter(s=>S.on[s.id]).map(async s=>{
+    try{
+      const r = await fetch("/api/predict",{method:"POST",headers:{"Content-Type":"application/json"},
+                 body:JSON.stringify({note, system:s.id})}).then(r=>r.json());
+      S.caseRes[s.id] = r.error ? {error:r.error} : r.probs;
+    }catch(e){ S.caseRes[s.id] = {error:String(e)}; }
+    renderResults();
+  }));
+}
+
+/* ---------------- per-case table ---------------- */
+function renderResults(){
+  const host = $("#results");
+  if(!S.case){ host.innerHTML = `<div class="empty"><h3>No case selected</h3></div>`; return; }
+  const table = el("table","grid");
+  const hr = el("tr");
+  hr.appendChild(el("th",null,"Variable"));
+  hr.appendChild(el("th",null,"Gold"));
+  for(const s of SYS){
+    const th = el("th",null,`<div class="sysmark"><i></i>${esc(s.name)}</div><small>${esc(s.sub)}</small>`);
+    th.style.setProperty("--c", s.color); hr.appendChild(th);
+  }
+  const thead = el("thead"); thead.appendChild(hr); table.appendChild(thead);
+  const tb = el("tbody");
+  const order = ["noul","choice","score"];
+  const entries = Object.entries(S.case.questions)
+    .sort((a,b)=> order.indexOf(a[1].type)-order.indexOf(b[1].type) || a[0].localeCompare(b[0]));
+
+  for(const [qid,q] of entries){
+    const tr = el("tr","qrow");
+    const gi = q.gold_index;
+    tr.appendChild(el("td",null,
+      `<div class="vname">${esc(qid.replace(/_/g," "))}</div>
+       <div class="vmeta"><span class="tag ${q.type}">${q.type}</span>
+       <span class="muted" style="font-size:11px">${q.keys.length} options</span></div>`));
+    tr.appendChild(el("td",null, gi===null||gi===undefined
+      ? `<span class="muted" style="font:11px var(--mono)">unlabelled</span>`
+      : `<span class="goldchip">${esc(shortOpt(q,gi))}</span>`));
+    for(const s of SYS){
+      const td = el("td"); td.style.setProperty("--c", s.color);
+      td.appendChild(cell(S.caseRes[s.id], q, qid, gi));
+      tr.appendChild(td);
+    }
+    tr.onclick = () => { S.open.has(qid) ? S.open.delete(qid) : S.open.add(qid); renderResults(); };
+    tb.appendChild(tr);
+    if(S.open.has(qid)) tb.appendChild(detailRow(qid,q));
+  }
+  table.appendChild(tb);
+  host.innerHTML=""; host.appendChild(table);
+}
+
+function probsOf(res, qid){
+  if(!res || res==="pending" || res.error) return null;
+  return res[qid] || null;
+}
+
+function cell(res, q, qid, gi){
+  const box = el("div","ans");
+  if(res === "pending"){
+    box.innerHTML = `<div class="mark na">·</div><div class="ansbody"><div class="skel" style="width:70%"></div>
+      <div class="skel" style="width:40%;height:4px;margin-top:8px"></div></div>`;
+    return box;
+  }
+  if(res && res.error){ box.innerHTML = `<div class="mark no">!</div><div class="ansbody err">${esc(res.error)}</div>`; return box; }
+  const p = probsOf(res, qid);
+  if(!p){ box.innerHTML = `<div class="mark na">·</div><div class="ansbody muted" style="font-size:12px">not run</div>`; return box; }
+  const j = argmax(p), conf = p[j];
+  const known = gi!==null && gi!==undefined, ok = known && j===gi;
+  box.innerHTML = `
+    <div class="mark ${known ? (ok?'ok':'no') : 'na'}">${known ? (ok?'✓':'✕') : '·'}</div>
+    <div class="ansbody">
+      <div class="ansval ${known&&!ok?'wrong':''}">${esc(shortOpt(q,j))}</div>
+      <div class="conf"><span class="bar"><i style="width:${100*conf}%"></i></span>
+        <span class="confnum">${(100*conf).toFixed(1)}%</span></div>
+    </div>`;
+  return box;
+}
+
+function detailRow(qid,q){
+  const tr = el("tr","detail"); const td = el("td"); td.colSpan = 2+SYS.length;
+  const wrap = el("div","dist");
+  wrap.appendChild(el("p","q",`<b>${esc(qid)}</b> — ${esc(q.instructions)}`));
+  for(const s of SYS){
+    const col = el("div","distcol"); col.style.setProperty("--c", s.color);
+    const p = probsOf(S.caseRes[s.id], qid);
+    let rows;
+    if(p){
+      const j = argmax(p);
+      rows = q.keys.map((k,i)=>`
+        <div class="distrow ${i===q.gold_index?'isgold':''}" title="${esc(q.options[i]||k)}">
+          <span class="k">${esc(shortOpt(q,i))}</span>
+          <span class="b"><i style="width:${100*p[i]}%"></i></span>
+          <span class="v" style="${i===j?'color:var(--ink)':''}">${(100*p[i]).toFixed(1)}</span>
+        </div>`).join("");
+    } else {
+      const r = S.caseRes[s.id];
+      rows = `<div class="muted" style="font-size:11px">${esc(r&&r.error ? r.error : "not run")}</div>`;
+    }
+    col.innerHTML = `<h4>${esc(s.name)}</h4>${rows}`;
+    wrap.appendChild(col);
+  }
+  td.appendChild(wrap); tr.appendChild(td); return tr;
+}
+
+/* ---------------- wiring ---------------- */
+$("#btnRun").onclick = startRun;
+$("#btnStop").onclick = stopRun;
+$("#btnRunNote").onclick = runNote;
+$("#btnPaste").onclick = pasteMode;
+$("#btnRandom").onclick = () => S.cases.length && loadCase(S.cases[Math.floor(Math.random()*S.cases.length)].idx);
+$("#search").oninput = e => renderCases(e.target.value);
+$("#btnExpand").onclick = () => {
+  const c = $("#noteBody").classList.toggle("collapsed");
+  $("#btnExpand").textContent = c ? "Expand" : "Collapse";
+};
+
+(async function init(){
+  S.meta = await fetch("/api/meta").then(r=>r.json());
+  S.limit = Math.min(100, S.meta.n_cases);
+  renderChips(); renderControls(); renderBoard(); renderQChart();
+  S.cases = (await fetch("/api/cases").then(r=>r.json())).cases;
+  renderCases();
+  if(S.cases.length) loadCase(S.cases[0].idx);
+  const p = await fetch("/api/progress").then(r=>r.json());   // a run may already be going
+  if(p && p.systems && Object.keys(p.systems).length){
+    S.prog = p; renderBoard(); renderQChart();
+    if(p.running){ $("#btnRun").disabled=true; $("#btnRun").textContent="Running…";
+                   $("#btnStop").style.display=""; S.poll=setInterval(poll,500); }
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+# secrets
+.env
+
+# environment / build
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.claude/
+CLAUDE.md 
+
+
+# vendored checkouts and model weights (fetch them separately; they are huge)
+augmented-clinical-notes/
+Qwen3.5-0.8B/
+Qwen3.5-0.8B-Base/
+Qwen3.5-4B/
+
+# generated data and experiment output
+runs/
+wandb/
+temp/
+docs/
+

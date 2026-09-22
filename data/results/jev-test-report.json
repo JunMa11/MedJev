@@ -1,0 +1,133 @@
+{
+  "system": "jev (TypeSafe System One)",
+  "model": "jev-1.13.0",
+  "split": "test",
+  "records_scored": 2895,
+  "questions_scored": 26286,
+  "records_missing": 0,
+  "request_errors": 0,
+  "micro_accuracy": 0.6016,
+  "macro_accuracy_over_questions": 0.6097,
+  "by_type": {
+    "noul": {
+      "questions": 5,
+      "n": 14475,
+      "micro_accuracy": 0.7346,
+      "brier": 0.4161
+    },
+    "choice": {
+      "questions": 3,
+      "n": 6516,
+      "micro_accuracy": 0.4851,
+      "brier": 0.92
+    },
+    "score": {
+      "questions": 3,
+      "n": 5295,
+      "micro_accuracy": 0.3815,
+      "brier": 1.0302
+    }
+  },
+  "runtime": {
+    "latency_ms_mean": 343.7,
+    "latency_ms_p50": 284.4,
+    "latency_ms_p90": 335.3,
+    "latency_ms_p99": 816.0,
+    "input_tokens": 5755844,
+    "output_tokens": 984699,
+    "tokens_per_record": 2328.3
+  },
+  "per_question": {
+    "hospital_admission": {
+      "type": "noul",
+      "n": 2895,
+      "accuracy": 0.7986,
+      "macro_f1": 0.681,
+      "brier": 0.3111,
+      "mean_confidence": 0.9008
+    },
+    "surgical_management": {
+      "type": "noul",
+      "n": 2895,
+      "accuracy": 0.8097,
+      "macro_f1": 0.7091,
+      "brier": 0.3331,
+      "mean_confidence": 0.9503
+    },
+    "drug_therapy": {
+      "type": "noul",
+      "n": 2895,
+      "accuracy": 0.6964,
+      "macro_f1": 0.694,
+      "brier": 0.5237,
+      "mean_confidence": 0.9216
+    },
+    "prior_comorbidity": {
+      "type": "noul",
+      "n": 2895,
+      "accuracy": 0.7368,
+      "macro_f1": 0.6945,
+      "brier": 0.3763,
+      "mean_confidence": 0.8758
+    },
+    "follow_up_planned": {
+      "type": "noul",
+      "n": 2895,
+      "accuracy": 0.6314,
+      "macro_f1": 0.5332,
+      "brier": 0.5364,
+      "mean_confidence": 0.833
+    },
+    "primary_diagnostic_modality": {
+      "type": "choice",
+      "n": 2895,
+      "accuracy": 0.4898,
+      "macro_f1": 0.3442,
+      "brier": 0.9084,
+      "mean_confidence": 0.9024
+    },
+    "principal_medical_therapy": {
+      "type": "choice",
+      "n": 2895,
+      "accuracy": 0.3655,
+      "macro_f1": 0.3255,
+      "brier": 1.1392,
+      "mean_confidence": 0.8986
+    },
+    "smoking_status": {
+      "type": "choice",
+      "n": 726,
+      "accuracy": 0.9435,
+      "macro_f1": 0.8756,
+      "brier": 0.0918,
+      "mean_confidence": 0.9734
+    },
+    "symptom_severity": {
+      "type": "score",
+      "n": 990,
+      "accuracy": 0.5939,
+      "macro_f1": 0.4024,
+      "brier": 0.681,
+      "mean_confidence": 0.8789,
+      "mae_levels": 0.5062
+    },
+    "treatment_response": {
+      "type": "score",
+      "n": 1410,
+      "accuracy": 0.2865,
+      "macro_f1": 0.2751,
+      "brier": 1.2158,
+      "mean_confidence": 0.8618,
+      "mae_levels": 0.9281
+    },
+    "diagnostic_workup_intensity": {
+      "type": "score",
+      "n": 2895,
+      "accuracy": 0.3551,
+      "macro_f1": 0.3272,
+      "brier": 1.0592,
+      "mean_confidence": 0.8539,
+      "mae_levels": 0.7537
+    }
+  }
+}

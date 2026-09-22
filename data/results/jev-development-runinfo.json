@@ -1,0 +1,21 @@
+[
+  {
+    "split": "development",
+    "model": "jev-latest",
+    "workers": 6,
+    "requested": 2997,
+    "ok": 2997,
+    "failed": 0,
+    "retries": 1,
+    "wall_seconds": 155.4,
+    "records_per_second": 19.285,
+    "latency_ms": {
+      "mean": 307.7,
+      "p50": 285.5,
+      "p90": 343.2,
+      "max": 1430.3
+    },
+    "input_tokens": 5982886,
+    "output_tokens": 1019062
+  }
+]

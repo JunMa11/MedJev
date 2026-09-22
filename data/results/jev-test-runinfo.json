@@ -1,0 +1,40 @@
+[
+  {
+    "split": "test",
+    "model": "jev-latest",
+    "workers": 4,
+    "requested": 20,
+    "ok": 20,
+    "failed": 0,
+    "retries": 0,
+    "wall_seconds": 1.5,
+    "records_per_second": 12.997,
+    "latency_ms": {
+      "mean": 298.9,
+      "p50": 290.8,
+      "p90": 370.4,
+      "max": 392.4
+    },
+    "input_tokens": 38331,
+    "output_tokens": 6677
+  },
+  {
+    "split": "test",
+    "model": "jev-latest",
+    "workers": 6,
+    "requested": 2875,
+    "ok": 2875,
+    "failed": 0,
+    "retries": 0,
+    "wall_seconds": 165.4,
+    "records_per_second": 17.378,
+    "latency_ms": {
+      "mean": 344.0,
+      "p50": 284.4,
+      "p90": 335.1,
+      "max": 19345.5
+    },
+    "input_tokens": 5717513,
+    "output_tokens": 978022
+  }
+]

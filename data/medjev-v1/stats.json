@@ -1,0 +1,105 @@
+{
+  "records_read": 30000,
+  "summaries_unparsable": 389,
+  "records_dropped": 0,
+  "records_written": {
+    "train": 23719,
+    "test": 2895,
+    "development": 2997
+  },
+  "questions_written": {
+    "hospital_admission": 29611,
+    "surgical_management": 29611,
+    "drug_therapy": 29611,
+    "prior_comorbidity": 29611,
+    "follow_up_planned": 29611,
+    "primary_diagnostic_modality": 29611,
+    "principal_medical_therapy": 29611,
+    "smoking_status": 7296,
+    "treatment_response": 14544,
+    "diagnostic_workup_intensity": 29611,
+    "symptom_severity": 10180
+  },
+  "total_questions": 268908,
+  "state_words_vs_384_token_budget": {
+    ">780": 3111,
+    "296-780": 26499,
+    "<=295": 1
+  },
+  "label_distribution": {
+    "hospital_admission": {
+      "True": 23524,
+      "False": 6087
+    },
+    "surgical_management": {
+      "True": 21004,
+      "False": 8607
+    },
+    "drug_therapy": {
+      "False": 18796,
+      "True": 10815
+    },
+    "prior_comorbidity": {
+      "True": 23804,
+      "False": 5807
+    },
+    "follow_up_planned": {
+      "False": 26481,
+      "True": 3130
+    },
+    "primary_diagnostic_modality": {
+      "imaging": 10366,
+      "histopathology": 6023,
+      "other": 4561,
+      "not_reported": 4333,
+      "laboratory": 2666,
+      "genetic_molecular": 675,
+      "endoscopy": 672,
+      "functional_testing": 315
+    },
+    "principal_medical_therapy": {
+      "surgery": 5883,
+      "none_recorded": 5846,
+      "other_pharmacotherapy": 5561,
+      "other": 4733,
+      "antimicrobial": 3019,
+      "supportive_palliative": 1935,
+      "chemotherapy": 1435,
+      "radiotherapy": 1199
+    },
+    "smoking_status": {
+      "not_documented": 3951,
+      "never": 1499,
+      "current": 1390,
+      "former": 456
+    },
+    "treatment_response": {
+      "1": 6947,
+      "0": 5985,
+      "2": 1612
+    },
+    "diagnostic_workup_intensity": {
+      "1": 15754,
+      "2": 7091,
+      "0": 6766
+    },
+    "symptom_severity": {
+      "2": 5566,
+      "1": 2800,
+      "0": 1814
+    }
+  },
+  "question_types": {
+    "hospital_admission": "noul",
+    "surgical_management": "noul",
+    "drug_therapy": "noul",
+    "prior_comorbidity": "noul",
+    "follow_up_planned": "noul",
+    "primary_diagnostic_modality": "choice",
+    "principal_medical_therapy": "choice",
+    "smoking_status": "choice",
+    "symptom_severity": "score",
+    "treatment_response": "score",
+    "diagnostic_workup_intensity": "score"
+  }
+}

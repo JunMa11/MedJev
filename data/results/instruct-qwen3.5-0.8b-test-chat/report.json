@@ -1,0 +1,118 @@
+{
+  "model": "Qwen3.5-0.8B",
+  "split": "test",
+  "records": 2895,
+  "readout": "zero-shot next-token letter logits (chat template)",
+  "prompt": "chat",
+  "max_note_tokens": 3072,
+  "overall": {
+    "n": 26286,
+    "micro_acc": 0.5172,
+    "macro_acc": 0.5288,
+    "brier": 0.6592,
+    "majority_micro_acc": 0.6019
+  },
+  "by_type": {
+    "noul": {
+      "questions": 5,
+      "n": 14475,
+      "micro_acc": 0.6338,
+      "macro_acc": 0.6338,
+      "majority_micro_acc": 0.7652
+    },
+    "choice": {
+      "questions": 3,
+      "n": 6516,
+      "micro_acc": 0.4058,
+      "macro_acc": 0.4957,
+      "majority_micro_acc": 0.3031
+    },
+    "score": {
+      "questions": 3,
+      "n": 5295,
+      "micro_acc": 0.3356,
+      "macro_acc": 0.3869,
+      "majority_micro_acc": 0.5231
+    }
+  },
+  "by_question": {
+    "primary_diagnostic_modality": {
+      "type": "choice",
+      "n": 2895,
+      "acc": 0.4494,
+      "brier": 0.7895,
+      "majority_acc": 0.3427
+    },
+    "principal_medical_therapy": {
+      "type": "choice",
+      "n": 2895,
+      "acc": 0.2718,
+      "brier": 1.1466,
+      "majority_acc": 0.2079
+    },
+    "smoking_status": {
+      "type": "choice",
+      "n": 726,
+      "acc": 0.7658,
+      "brier": 0.419,
+      "majority_acc": 0.5248
+    },
+    "drug_therapy": {
+      "type": "noul",
+      "n": 2895,
+      "acc": 0.6504,
+      "brier": 0.5146,
+      "majority_acc": 0.6352
+    },
+    "follow_up_planned": {
+      "type": "noul",
+      "n": 2895,
+      "acc": 0.1168,
+      "brier": 1.1652,
+      "majority_acc": 0.8891
+    },
+    "hospital_admission": {
+      "type": "noul",
+      "n": 2895,
+      "acc": 0.7914,
+      "brier": 0.294,
+      "majority_acc": 0.8007
+    },
+    "prior_comorbidity": {
+      "type": "noul",
+      "n": 2895,
+      "acc": 0.7886,
+      "brier": 0.2817,
+      "majority_acc": 0.7917
+    },
+    "surgical_management": {
+      "type": "noul",
+      "n": 2895,
+      "acc": 0.8218,
+      "brier": 0.2828,
+      "majority_acc": 0.7092
+    },
+    "diagnostic_workup_intensity": {
+      "type": "score",
+      "n": 2895,
+      "acc": 0.2629,
+      "brier": 0.7511,
+      "majority_acc": 0.5406
+    },
+    "symptom_severity": {
+      "type": "score",
+      "n": 990,
+      "acc": 0.5949,
+      "brier": 0.5577,
+      "majority_acc": 0.5545
+    },
+    "treatment_response": {
+      "type": "score",
+      "n": 1410,
+      "acc": 0.3028,
+      "brier": 0.9521,
+      "majority_acc": 0.4652
+    }
+  },
+  "seconds": 782.4
+}

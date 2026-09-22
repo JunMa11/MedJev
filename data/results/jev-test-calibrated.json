@@ -1,0 +1,118 @@
+{
+  "system": "jev + development-fitted prior correction",
+  "split": "test",
+  "micro_accuracy": 0.6913,
+  "questions_scored": 26286,
+  "per_question": {
+    "hospital_admission": {
+      "type": "noul",
+      "n": 2895,
+      "raw_accuracy": 0.7986,
+      "calibrated_accuracy": 0.8024,
+      "calibrated_macro_f1": 0.6697,
+      "calibrated_brier": 0.282,
+      "temperature": 2.9,
+      "dev_accuracy": 0.7888
+    },
+    "surgical_management": {
+      "type": "noul",
+      "n": 2895,
+      "raw_accuracy": 0.8097,
+      "calibrated_accuracy": 0.8387,
+      "calibrated_macro_f1": 0.7893,
+      "calibrated_brier": 0.3253,
+      "temperature": 2.8,
+      "dev_accuracy": 0.8268
+    },
+    "drug_therapy": {
+      "type": "noul",
+      "n": 2895,
+      "raw_accuracy": 0.6964,
+      "calibrated_accuracy": 0.7351,
+      "calibrated_macro_f1": 0.7254,
+      "calibrated_brier": 0.3502,
+      "temperature": 3.0,
+      "dev_accuracy": 0.7234
+    },
+    "prior_comorbidity": {
+      "type": "noul",
+      "n": 2895,
+      "raw_accuracy": 0.7368,
+      "calibrated_accuracy": 0.8577,
+      "calibrated_macro_f1": 0.7406,
+      "calibrated_brier": 0.2367,
+      "temperature": 2.5,
+      "dev_accuracy": 0.8595
+    },
+    "follow_up_planned": {
+      "type": "noul",
+      "n": 2895,
+      "raw_accuracy": 0.6314,
+      "calibrated_accuracy": 0.8891,
+      "calibrated_macro_f1": 0.4707,
+      "calibrated_brier": 0.1863,
+      "temperature": 2.4,
+      "dev_accuracy": 0.9006
+    },
+    "primary_diagnostic_modality": {
+      "type": "choice",
+      "n": 2895,
+      "raw_accuracy": 0.4898,
+      "calibrated_accuracy": 0.4905,
+      "calibrated_macro_f1": 0.3576,
+      "calibrated_brier": 0.8542,
+      "temperature": 1.5,
+      "dev_accuracy": 0.4728
+    },
+    "principal_medical_therapy": {
+      "type": "choice",
+      "n": 2895,
+      "raw_accuracy": 0.3655,
+      "calibrated_accuracy": 0.3896,
+      "calibrated_macro_f1": 0.3657,
+      "calibrated_brier": 1.0164,
+      "temperature": 1.7,
+      "dev_accuracy": 0.369
+    },
+    "smoking_status": {
+      "type": "choice",
+      "n": 726,
+      "raw_accuracy": 0.9435,
+      "calibrated_accuracy": 0.9504,
+      "calibrated_macro_f1": 0.8887,
+      "calibrated_brier": 0.0842,
+      "temperature": 1.5,
+      "dev_accuracy": 0.9413
+    },
+    "symptom_severity": {
+      "type": "score",
+      "n": 990,
+      "raw_accuracy": 0.5939,
+      "calibrated_accuracy": 0.6242,
+      "calibrated_macro_f1": 0.5462,
+      "calibrated_brier": 0.5633,
+      "temperature": 2.5,
+      "dev_accuracy": 0.5972
+    },
+    "treatment_response": {
+      "type": "score",
+      "n": 1410,
+      "raw_accuracy": 0.2865,
+      "calibrated_accuracy": 0.4397,
+      "calibrated_macro_f1": 0.3593,
+      "calibrated_brier": 0.8594,
+      "temperature": 2.6,
+      "dev_accuracy": 0.4161
+    },
+    "diagnostic_workup_intensity": {
+      "type": "score",
+      "n": 2895,
+      "raw_accuracy": 0.3551,
+      "calibrated_accuracy": 0.6076,
+      "calibrated_macro_f1": 0.5647,
+      "calibrated_brier": 0.5752,
+      "temperature": 3.0,
+      "dev_accuracy": 0.6033
+    }
+  }
+}
